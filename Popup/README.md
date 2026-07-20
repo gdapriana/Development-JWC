@@ -1,63 +1,19 @@
-# Modul Popup Banner
+# Modul Popup (Product & Event)
 
-Panduan konfigurasi dan integrasi modul popup / modal banner (`popup.php` & `sidebar_popup.php`) pada tema JWC.
-
----
-
-## 🛠️ Langkah-Langkah Panduan & Setup
-
-### 1. Penempatan File
-* Pindahkan file `popup.php` ke:
-  ```
-  public_html/theme/front/sidebar/type/popup.php
-  ```
-* Pindahkan file `sidebar_popup.php` ke:
-  ```
-  public_html/theme/front/sidebar/sidebar_popup.php
-  ```
+Kumpulan modul popup dialog / modal banner kustom untuk tema JWC yang terbagi berdasarkan tipe konten.
 
 ---
 
-### 2. Modifikasi File `post.php`
-Tambahkan logika kondisional berikut pada file `public_html/theme/front/sidebar/type/post.php`:
+## 📂 Sub-Modul Popup
 
-```php
-...
-<?php if ($opsi == 'popup'): ?>
-    <?php include "popup.php"; ?>
-<?php endif; ?>
-...
-```
+| Tipe Popup | Deskripsi Konten | Path Dokumentasi |
+| :--- | :--- | :--- |
+| 🛍️ **[Product Popup](Product)** | Popup promo untuk menampilkan katalog produk, harga, tombol pemesanan & link WhatsApp. | [Product/README.md](Product/README.md) |
+| 📅 **[Event Popup](Event)** | Popup event untuk menampilkan agenda event, tanggal pelaksanaan, jam, lokasi & executor. | [Event/README.md](Event/README.md) |
 
 ---
 
-### 3. Register Sidebar pada Config Tema
-Tambahkan `Sidebar_Popup` ke dalam array sidebar di file `public_html/jwc_theme_config.php`:
+## 💡 Perbedaan Utama Data & Layout
 
-```php
-$data['sidebar'] = array(
-    ...
-    'Sidebar_Popup' => 'sidebar_popup',
-    ...
-);
-```
-
----
-
-### 4. Pemanggilan Sidebar di Footer
-Tambahkan baris berikut pada file footer aplikasi/tema:
-
-```php
-...
-<?php if ($data->site_position == 'home'): ?>
-    <?php $func->sidebar('popup'); ?>
-<?php endif; ?>
-...
-```
-
----
-
-### 5. Pengaturan Sidebar & Tag di cPanel / Admin
-1. Tambahkan data sidebar baru pada cPanel/Admin Dashboard dengan memilih tipe `Sidebar_Popup`.
-2. Tambahkan tag produk/postingan yang sesuai dengan kriteria tag pada sidebar yang telah diinputkan.
-3. Produk/post yang memiliki tag ini secara otomatis akan ditampilkan di dalam popup modal.
+* **Product Popup**: Menampilkan `img_cover_url`, `price` (Rp), dan tombol pemesanan/booking (`ROUTE_PRODUCT_VIEW`).
+* **Event Popup**: Menampilkan `img_cover`, `date_start` & `date_finish`, `start_at` (jam), `location` (lokasi), `executor` (penyelenggara), serta tombol detail event (`ROUTE_EVENT_VIEW`).

@@ -11,7 +11,8 @@ Repository kumpulan modul, komponen kustom, dan templat header PHP yang dikemban
 | 🛒 **[Cart](Cart)** | Komponen keranjang belanja e-commerce & integrasi modal cart | [Cart/README.md](Cart/README.md) |
 | 💱 **[Currency Exchange](Currency%20Exchange)** | Modul penukar mata uang otomatis (multi-currency) | [Currency Exchange/README.md](Currency%20Exchange/README.md) |
 | 🖼️ **[Header](Header%20)** | Koleksi templat header kustom berbasis brand/klien | [Header/README.md](Header%20/README.md) |
-| 🪟 **[Popup](Popup)** | Modul popup modal & banner promosi berbasis tag produk | [Popup/README.md](Popup/README.md) |
+| 🛍️ **[Popup Product](Popup/Product)** | Modul popup modal promo produk | [Popup/Product/README.md](Popup/Product/README.md) |
+| 📅 **[Popup Event](Popup/Event)** | Modul popup modal agenda & detail event | [Popup/Event/README.md](Popup/Event/README.md) |
 | 🔍 **[Search](Search)** | Fitur pencarian interaktif real-time (Live Search) | [Search/README.md](Search/README.md) |
 | 🎛️ **Filter** | Modul penyaringan data *(persiapan pengembangan)* | - |
 | 🎞️ **Slider** | Modul banner slider *(persiapan pengembangan)* | - |
