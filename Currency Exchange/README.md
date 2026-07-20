@@ -46,10 +46,39 @@ Buat elemen dropdown selector mata uang (pilihan negara/mata uang dapat disesuai
 ---
 
 ### 4. Konfigurasi Area Tampilan Harga
-Pada area/elemen HTML yang menampilkan harga produk, bungkus harga dengan class `price price-convert` serta sediakan atribut `data-price-idr`:
+
+#### A. Harga Normal
+Elemen yang menampilkan harga asli/normal menggunakan class `price price-convert` dan atribut `data-price-idr`:
 
 ```html
 <div class="price price-convert" data-price-idr="<?= $items->price ?>">
     Rp. <?= $items->price ?>
 </div>
+```
+
+#### B. Harga Dicoret (Coretan Diskon 120%)
+Gunakan class `price-convert-crossout` untuk menampilkan harga awal yang dicoret (otomatis dihitung **120% dari harga asli**):
+
+```html
+<!-- Elemen harga dicoret di atas harga asli -->
+<span class="price-convert-crossout" data-price-idr="<?= $items->price ?>" style="text-decoration: line-through; opacity: 0.7;"></span>
+
+<div class="price price-convert" data-price-idr="<?= $items->price ?>">
+    Rp. <?= $items->price ?>
+</div>
+```
+
+---
+
+### 5. Integrasi Tautan WhatsApp (Opsional)
+Jika Anda memiliki tombol pemesanan WhatsApp, gunakan class `wa-convert` agar pesan WhatsApp secara otomatis dikonversi ke mata uang yang dipilih pengguna:
+
+```html
+<a href="#" 
+   class="wa-convert" 
+   data-price-idr="<?= $items->price ?>" 
+   data-product-name="<?= $items->title ?>" 
+   data-phone="628123456789">
+   Pesan via WhatsApp
+</a>
 ```

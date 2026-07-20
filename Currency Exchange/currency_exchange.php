@@ -1,18 +1,26 @@
 <!-- 
-#SETIDAKNYA TERDAPAT DROPDOWN MENU UNTUK MEMILIH CURRENCY
+# DOKUMENTASI PENGGUNAAN KOMPONEN CURRENCY EXCHANGE
 
+1. DROPDOWN MENU PILIHAN CURRENCY:
 <div class="currency-selector">
   <select id="currency-select" class="currency-dropdown">
-  <option value="IDR">IDR (Rp)</option>
-  <option value="USD">USD ($)</option>
-  <option value="EUR">EUR (€)</option>
-  <option value="AUD">AUD (A$)</option>
-  <option value="SGD">SGD (S$)</option>
-</select>
+    <option value="IDR">IDR (Rp)</option>
+    <option value="USD">USD ($)</option>
+    <option value="EUR">EUR (€)</option>
+    <option value="AUD">AUD (A$)</option>
+    <option value="SGD">SGD (S$)</option>
+  </select>
+</div>
 
+2. TAMPILAN HARGA NORMAL:
+<div class="price price-convert" data-price-idr="<?= $items->price ?>">Rp. <?= $items->price ?></div>
 
-#PADA ELEMENT YANG MENAMPILKAN HARGA
-<div class="price price-convert" data-price-idr="<?= $items->price ?>">Rp. <?= $items->price?></div>
+3. TAMPILAN HARGA DICORET (120% dari harga asli):
+<span class="price-convert-crossout" data-price-idr="<?= $items->price ?>"></span>
+<div class="price price-convert" data-price-idr="<?= $items->price ?>">Rp. <?= $items->price ?></div>
+
+4. TAUTAN WHATSAPP OTOMATIS KONVERSI:
+<a href="#" class="wa-convert" data-price-idr="<?= $items->price ?>" data-product-name="<?= $items->title ?>" data-phone="628123456789">Pesan via WhatsApp</a>
 -->
 
 <script>
@@ -37,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         SGD: 'en-SG'
     };
 
-    const globalWaPhone = "<?= $data->social->whatsapp ?? '' ?>";
+    const globalWaPhone = "<?= isset($data->social->whatsapp) ? $data->social->whatsapp : '' ?>";
 
     // Mengambil semua kurs sekaligus dari API
     async function fetchExchangeRates() {
@@ -83,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Perbarui harga & tautan WhatsApp di halaman
     function updatePrices(targetCurrency) {
-        // A. Perbarui Teks Harga
+        // A. Perbarui Teks Harga Normal
         const priceElements = document.querySelectorAll('.price-convert');
         priceElements.forEach(el => {
             const basePriceIDR = parseFloat(el.getAttribute('data-price-idr'));
@@ -93,7 +101,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // B. Perbarui Link WhatsApp
+        // B. Perbarui Teks Harga Dicoret (120% dari harga asli)
+        const crossoutElements = document.querySelectorAll('.price-convert-crossout');
+        crossoutElements.forEach(el => {
+            let basePriceIDR = parseFloat(el.getAttribute('data-price-idr'));
+            
+            // Fallback: Jika data-price-idr tidak ada di el sendiri, ambil dari sibling .price-convert
+            if (isNaN(basePriceIDR)) {
+                const siblingPrice = el.parentElement ? el.parentElement.querySelector('.price-convert') : null;
+                if (siblingPrice) {
+                    basePriceIDR = parseFloat(siblingPrice.getAttribute('data-price-idr'));
+                }
+            }
+
+            if (!isNaN(basePriceIDR)) {
+                const crossoutPriceIDR = basePriceIDR * 1.20; // 120% dari harga asli
+                const convertedPrice = crossoutPriceIDR * exchangeRates[targetCurrency];
+                el.textContent = formatCurrency(convertedPrice, targetCurrency);
+            }
+        });
+
+        // C. Perbarui Link WhatsApp
         const waLinks = document.querySelectorAll('.wa-convert');
         waLinks.forEach(link => {
             const basePriceIDR = parseFloat(link.getAttribute('data-price-idr'));
@@ -112,10 +140,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Ekspor fungsi ke window agar dapat dipanggil dari AJAX/skrip lain jika diperlukan
+    window.updateCurrencyExchange = updatePrices;
+
     // Inisialisasi awal
     async function init() {
         const savedCurrency = localStorage.getItem('user-currency') || 'IDR';
-        currencySelect.value = savedCurrency;
+        if (currencySelect) {
+            currencySelect.value = savedCurrency;
+        }
 
         // Ambil data kurs
         await fetchExchangeRates();
@@ -124,11 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePrices(savedCurrency);
 
         // Listener saat user merubah dropdown
-        currencySelect.addEventListener('change', (e) => {
-            const selectedCurrency = e.target.value;
-            localStorage.setItem('user-currency', selectedCurrency);
-            updatePrices(selectedCurrency);
-        });
+        if (currencySelect) {
+            currencySelect.addEventListener('change', (e) => {
+                const selectedCurrency = e.target.value;
+                localStorage.setItem('user-currency', selectedCurrency);
+                updatePrices(selectedCurrency);
+            });
+        }
     }
 
     init();
